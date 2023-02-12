@@ -52,6 +52,7 @@ void Menu()
     puts("Calculate the number of remaining antennas   [1]");
     puts("List departments with the number of antennas [2]");
     puts("Estimated list of how many antennas exist    [3]");
+    puts("Exit.                                        [4]");
 }
 
 void SelectType(Data *data, int32_t index_d, char* type)
@@ -189,18 +190,27 @@ void List(const Data *data)
 loop:
     flag = false;
 
-    for (size_t i = 0 ; i < data->size ; ++i)
+    for (size_t i = 0 ; i < (data->size - 1) ; ++i)
     {
-        if (list.departament[i].new_antennas > list.departament[i].new_antennas)
+        if (list.departament[i].new_antennas > list.departament[i + 1].new_antennas)
         {
             Departament first_dp;
             first_dp.new_antennas = list.departament[i].new_antennas;
+            first_dp.type = list.departament[i].type;
+            first_dp.id = list.departament[i].id;
 
             Departament second_dp;
             second_dp.new_antennas = list.departament[i + 1].new_antennas;
+            second_dp.type = list.departament[i + 1].type;
+            second_dp.id = list.departament[i + 1].id;
 
             list.departament[i].new_antennas = second_dp.new_antennas;
+            list.departament[i].type = second_dp.type;
+            list.departament[i].id = second_dp.id;
+
             list.departament[i + 1].new_antennas = first_dp.new_antennas;
+            list.departament[i + 1].type = first_dp.type;
+            list.departament[i + 1].id = first_dp.id;
 
             flag = true;
         }
@@ -227,9 +237,9 @@ loop:
 
 void Porcentage(Data *data)
 {
-    int32_t total_antennas = 0;
+    float total_antennas = 0;
     Data    list;
-    bool flag;
+    bool    flag;
 
     list.departament = malloc(sizeof(Departament) * data->size);
 
@@ -244,22 +254,36 @@ void Porcentage(Data *data)
     for (size_t i = 0 ; i < data->size ; ++i)
     {
         list.departament[i].usage = (list.departament[i].new_antennas / total_antennas) * 100;
+        printf("Porcentaje: %.1f\n", list.departament[i].usage);
     }
 
 loop:
     flag = false;
 
-    for (size_t i = 0 ; i < data->size ; ++i)
+    for (size_t i = 0 ; i < (data->size - 1) ; ++i)
     {
-        if (list.departament[i].usage > list.departament[i].usage)
+        if (list.departament[i].usage > list.departament[i + 1].usage)
         {
             Departament first_dp;
+            first_dp.new_antennas = list.departament[i].new_antennas;
+            first_dp.type = list.departament[i].type;
+            first_dp.id = list.departament[i].id;
             first_dp.usage = list.departament[i].usage;
 
             Departament second_dp;
+            second_dp.new_antennas = list.departament[i + 1].new_antennas;
+            second_dp.type = list.departament[i + 1].type;
+            second_dp.id = list.departament[i + 1].id;
             second_dp.usage = list.departament[i + 1].usage;
 
+            list.departament[i].new_antennas = second_dp.new_antennas;
+            list.departament[i].type = second_dp.type;
+            list.departament[i].id = second_dp.id;
             list.departament[i].usage = second_dp.usage;
+
+            list.departament[i + 1].new_antennas = first_dp.new_antennas;
+            list.departament[i + 1].type = first_dp.type;
+            list.departament[i + 1].id = first_dp.id;
             list.departament[i + 1].usage = first_dp.usage;
 
             flag = true;
